@@ -182,12 +182,38 @@ export default {
     };
 
     const onBookingSubmitted = async (bookingData) => {
+      // Clear any previous success/error messages
+      bookingSuccess.value = false;
+      error.value = '';
+
       try {
         await api.bookAppointment(bookingData);
         bookingSuccess.value = true;
-        error.value = '';
+
+        // Reload available slots to show updated availability
+        if (selectedDate.value && selectedService.value) {
+          selectedTime.value = null; // Clear selected time to show updated availability
+          await loadAvailableSlots(selectedDate.value, selectedService.value.id);
+        }
       } catch (err) {
-        error.value = err.response?.data?.message || 'Failed to book appointment. Please try again.';
+        if (err.response?.data?.errors) {
+          // Handle validation errors
+          const validationErrors = err.response.data.errors;
+          const errorMessages = [];
+
+          // Extract error messages from validation errors
+          Object.keys(validationErrors).forEach(field => {
+            if (Array.isArray(validationErrors[field])) {
+              errorMessages.push(...validationErrors[field]);
+            } else {
+              errorMessages.push(validationErrors[field]);
+            }
+          });
+
+          error.value = errorMessages.join('. ');
+        } else {
+          error.value = err.response?.data?.message || 'Failed to book appointment. Please try again.';
+        }
         console.error('Error booking appointment:', err);
       }
     };

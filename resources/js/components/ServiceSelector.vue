@@ -24,15 +24,9 @@
         <div class="flex justify-between items-start mb-3">
           <h4 class="text-lg font-semibold text-gray-900">{{ service.name }}</h4>
           <div class="text-right">
-            <div class="text-2xl font-bold text-blue-600">${{ service.price }}</div>
             <div class="text-sm text-gray-500">{{ formatDuration(service.duration_minutes) }}</div>
           </div>
         </div>
-
-        <!-- Service Description -->
-        <p v-if="service.description" class="text-sm text-gray-600 mb-3">
-          {{ service.description }}
-        </p>
 
         <!-- Selection Indicator -->
         <div v-if="selectedService && selectedService.id === service.id" class="flex items-center text-blue-600">
@@ -58,9 +52,6 @@
         <div>
           <p class="font-medium text-blue-900">{{ selectedService.name }}</p>
           <p class="text-sm text-blue-700">{{ formatDuration(selectedService.duration_minutes) }}</p>
-        </div>
-        <div class="text-right">
-          <p class="text-2xl font-bold text-blue-900">${{ selectedService.price }}</p>
         </div>
       </div>
     </div>

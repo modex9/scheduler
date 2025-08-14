@@ -64,7 +64,6 @@
           </div>
           <div class="text-right">
             <p class="text-sm text-blue-700">Duration: {{ formatDuration(selectedTime.duration_minutes) }}</p>
-            <p class="text-lg font-bold text-blue-900">${{ selectedTime.price }}</p>
           </div>
         </div>
       </div>

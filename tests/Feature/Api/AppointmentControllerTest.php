@@ -27,8 +27,6 @@ class AppointmentControllerTest extends TestCase
             'appointment_time' => '09:00',
             'service_id' => $service->id,
             'client_email' => 'john@example.com',
-            'client_name' => 'John Doe',
-            'notes' => 'First time client',
         ]);
 
         $response->assertStatus(201)
@@ -42,9 +40,7 @@ class AppointmentControllerTest extends TestCase
                         'appointment_time',
                         'service_id',
                         'client_email',
-                        'client_name',
                         'status',
-                        'notes',
                         'service'
                     ]
                 ]
@@ -57,9 +53,7 @@ class AppointmentControllerTest extends TestCase
                         'appointment_date' => $monday,
                         'appointment_time' => '09:00',
                         'client_email' => 'john@example.com',
-                        'client_name' => 'John Doe',
                         'status' => 'confirmed',
-                        'notes' => 'First time client',
                     ]
                 ]
             ]);
@@ -69,7 +63,6 @@ class AppointmentControllerTest extends TestCase
             'appointment_time' => '09:00',
             'service_id' => $service->id,
             'client_email' => 'john@example.com',
-            'client_name' => 'John Doe',
         ]);
     }
 
@@ -83,7 +76,6 @@ class AppointmentControllerTest extends TestCase
             'appointment_time' => '09:00',
             'service_id' => $service->id,
             'client_email' => 'john@example.com',
-            'client_name' => 'John Doe',
         ]);
 
         $response->assertStatus(422)
@@ -103,7 +95,6 @@ class AppointmentControllerTest extends TestCase
             'appointment_time' => '09:00',
             'service_id' => 999,
             'client_email' => 'john@example.com',
-            'client_name' => 'John Doe',
         ]);
 
         $response->assertStatus(422);
@@ -119,7 +110,6 @@ class AppointmentControllerTest extends TestCase
             'appointment_time' => '09:00',
             'service_id' => $service->id,
             'client_email' => 'invalid-email',
-            'client_name' => 'John Doe',
         ]);
 
         $response->assertStatus(422);
@@ -136,7 +126,6 @@ class AppointmentControllerTest extends TestCase
             'appointment_time' => '09:00',
             'service_id' => $service->id,
             'client_email' => 'john@example.com',
-            'client_name' => 'John Doe',
         ]);
 
         // Try to book duplicate
@@ -145,10 +134,9 @@ class AppointmentControllerTest extends TestCase
             'appointment_time' => '09:00',
             'service_id' => $service->id,
             'client_email' => 'jane@example.com',
-            'client_name' => 'Jane Doe',
         ]);
 
-        $response->assertStatus(500); // Should fail due to unique constraint
+        $response->assertStatus(422); // Should fail due to validation (slot not available)
     }
 
     public function test_can_get_appointment_details(): void
@@ -159,7 +147,6 @@ class AppointmentControllerTest extends TestCase
             'appointment_time' => '09:00',
             'service_id' => $service->id,
             'client_email' => 'john@example.com',
-            'client_name' => 'John Doe',
         ]);
 
         $response = $this->getJson("/api/appointments/{$appointment->id}");
@@ -174,7 +161,6 @@ class AppointmentControllerTest extends TestCase
                         'appointment_time',
                         'service_id',
                         'client_email',
-                        'client_name',
                         'status',
                         'service'
                     ]
@@ -186,7 +172,6 @@ class AppointmentControllerTest extends TestCase
                     'appointment' => [
                         'id' => $appointment->id,
                         'client_email' => 'john@example.com',
-                        'client_name' => 'John Doe',
                     ]
                 ]
             ]);
@@ -200,7 +185,6 @@ class AppointmentControllerTest extends TestCase
             'appointment_time' => '09:00',
             'service_id' => $service->id,
             'client_email' => 'john@example.com',
-            'client_name' => 'John Doe',
         ]);
 
         $response = $this->deleteJson("/api/appointments/{$appointment->id}/cancel");
@@ -229,7 +213,6 @@ class AppointmentControllerTest extends TestCase
             'appointment_time' => '09:00',
             'service_id' => $service->id,
             'client_email' => 'john@example.com',
-            'client_name' => 'John Doe',
         ]);
 
         Appointment::create([
@@ -237,7 +220,6 @@ class AppointmentControllerTest extends TestCase
             'appointment_time' => '10:00',
             'service_id' => $service->id,
             'client_email' => 'jane@example.com',
-            'client_name' => 'Jane Doe',
         ]);
 
         $response = $this->getJson("/api/appointments/range?start_date={$monday}&end_date={$tuesday}");

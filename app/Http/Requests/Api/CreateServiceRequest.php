@@ -24,8 +24,6 @@ class CreateServiceRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'duration_minutes' => 'required|integer|min:15|max:480', // 15 minutes to 8 hours
-            'price' => 'required|numeric|min:0',
-            'description' => 'nullable|string',
             'is_active' => 'boolean',
         ];
     }
@@ -38,7 +36,6 @@ class CreateServiceRequest extends FormRequest
         return [
             'duration_minutes.min' => 'Service duration must be at least 15 minutes.',
             'duration_minutes.max' => 'Service duration cannot exceed 8 hours.',
-            'price.min' => 'Service price cannot be negative.',
         ];
     }
 }

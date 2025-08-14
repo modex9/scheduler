@@ -45,7 +45,7 @@ class VerifyDatabaseSetup extends Command
         $services = Service::all();
         if ($services->count() > 0) {
             foreach ($services as $service) {
-                $this->line("  • {$service->name} ({$service->duration_formatted}) - \${$service->price}");
+                $this->line("  • {$service->name} ({$service->duration_formatted})");
             }
         } else {
             $this->warn("  No services found. Run 'php artisan db:seed' to populate data.");

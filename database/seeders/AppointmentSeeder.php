@@ -31,20 +31,14 @@ class AppointmentSeeder extends Seeder
             [
                 'name' => 'Haircut',
                 'duration_minutes' => 60,
-                'price' => 50.00,
-                'description' => 'Professional haircut and styling',
             ],
             [
                 'name' => 'Hair Coloring',
                 'duration_minutes' => 120,
-                'price' => 100.00,
-                'description' => 'Full hair coloring service',
             ],
             [
                 'name' => 'Quick Trim',
                 'duration_minutes' => 30,
-                'price' => 25.00,
-                'description' => 'Quick trim and cleanup',
             ],
         ];
 

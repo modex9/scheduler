@@ -16,8 +16,6 @@ class ServiceTest extends TestCase
         $service = Service::create([
             'name' => 'Haircut',
             'duration_minutes' => 60,
-            'price' => 50.00,
-            'description' => 'Professional haircut service',
             'is_active' => true,
         ]);
 
@@ -25,8 +23,6 @@ class ServiceTest extends TestCase
             'id' => $service->id,
             'name' => 'Haircut',
             'duration_minutes' => 60,
-            'price' => '50.00',
-            'description' => 'Professional haircut service',
             'is_active' => true,
         ]);
     }
@@ -36,7 +32,6 @@ class ServiceTest extends TestCase
         $service = Service::create([
             'name' => 'Haircut',
             'duration_minutes' => 90,
-            'price' => 50.00,
         ]);
 
         $this->assertEquals('1h 30m', $service->duration_formatted);
@@ -47,7 +42,6 @@ class ServiceTest extends TestCase
         $service = Service::create([
             'name' => 'Long Service',
             'duration_minutes' => 120,
-            'price' => 100.00,
         ]);
 
         $this->assertEquals('2h', $service->duration_formatted);
@@ -58,7 +52,6 @@ class ServiceTest extends TestCase
         $service = Service::create([
             'name' => 'Quick Service',
             'duration_minutes' => 30,
-            'price' => 25.00,
         ]);
 
         $this->assertEquals('30m', $service->duration_formatted);
@@ -69,14 +62,12 @@ class ServiceTest extends TestCase
         Service::create([
             'name' => 'Active Service',
             'duration_minutes' => 60,
-            'price' => 50.00,
             'is_active' => true,
         ]);
 
         Service::create([
             'name' => 'Inactive Service',
             'duration_minutes' => 60,
-            'price' => 50.00,
             'is_active' => false,
         ]);
 
@@ -91,7 +82,6 @@ class ServiceTest extends TestCase
         $service = Service::create([
             'name' => 'Haircut',
             'duration_minutes' => 60,
-            'price' => 50.00,
         ]);
 
         $workingHour = WorkingHour::create([

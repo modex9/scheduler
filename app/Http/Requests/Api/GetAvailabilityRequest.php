@@ -14,7 +14,7 @@ class GetAvailabilityRequest extends FormRequest
         return true;
     }
 
-    /**
+        /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -22,9 +22,32 @@ class GetAvailabilityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => 'required|date|after_or_equal:today',
+            'date' => 'required|date',
             'service_id' => 'nullable|integer|exists:services,id',
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $date = $this->input('date');
+
+            if ($date) {
+                // Create date using the application's timezone
+                $requestDate = \Carbon\Carbon::parse($date, config('app.timezone'))->startOfDay();
+
+                // Get current date in the application's timezone
+                $today = now()->startOfDay();
+
+                // Check if date is in the past
+                if ($requestDate->lt($today)) {
+                    $validator->errors()->add('date', 'Cannot check availability for past dates.');
+                }
+            }
+        });
     }
 
     /**
@@ -33,7 +56,6 @@ class GetAvailabilityRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'date.after_or_equal' => 'Cannot check availability for past dates.',
             'service_id.exists' => 'The selected service does not exist.',
         ];
     }

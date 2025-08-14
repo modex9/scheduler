@@ -32,9 +32,8 @@
             >
               <div>
                 <h3 class="font-semibold text-gray-900">{{ service.name }}</h3>
-                <p class="text-sm text-gray-600">{{ service.description }}</p>
                 <p class="text-sm text-gray-500">
-                  Duration: {{ formatDuration(service.duration_minutes) }} | Price: ${{ service.price }}
+                  Duration: {{ formatDuration(service.duration_minutes) }}
                 </p>
               </div>
               <div class="flex items-center space-x-2">
@@ -133,38 +132,15 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea
-              v-model="serviceForm.description"
-              rows="3"
+            <label class="block text-sm font-medium text-gray-700 mb-1">Duration (minutes)</label>
+            <input
+              v-model="serviceForm.duration_minutes"
+              type="number"
+              min="15"
+              max="480"
+              required
               class="w-full px-3 py-2 border border-gray-300 rounded-md"
-            ></textarea>
-          </div>
-
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Duration (minutes)</label>
-              <input
-                v-model="serviceForm.duration_minutes"
-                type="number"
-                min="15"
-                max="480"
-                required
-                class="w-full px-3 py-2 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Price ($)</label>
-              <input
-                v-model="serviceForm.price"
-                type="number"
-                min="0"
-                step="0.01"
-                required
-                class="w-full px-3 py-2 border border-gray-300 rounded-md"
-              />
-            </div>
+            />
           </div>
 
           <div class="flex items-center">
@@ -310,9 +286,7 @@ export default {
 
     const serviceForm = reactive({
       name: '',
-      description: '',
       duration_minutes: 60,
-      price: 0,
       is_active: true,
     });
 
@@ -462,9 +436,7 @@ export default {
       editingService.value = null;
       Object.assign(serviceForm, {
         name: '',
-        description: '',
         duration_minutes: 60,
-        price: 0,
         is_active: true,
       });
     };

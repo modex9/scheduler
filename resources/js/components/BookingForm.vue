@@ -23,10 +23,6 @@
             <p class="text-sm text-gray-500">Duration</p>
             <p class="text-sm font-medium text-gray-900">{{ formatDuration(selectedService.duration_minutes) }}</p>
           </div>
-          <div class="text-right">
-            <p class="text-sm text-gray-500">Total Price</p>
-            <p class="text-2xl font-bold text-blue-600">${{ selectedService.price }}</p>
-          </div>
         </div>
       </div>
     </div>
@@ -37,21 +33,6 @@
       <div>
         <h4 class="text-lg font-semibold text-gray-900 mb-4">Personal Information</h4>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="client_name" class="block text-sm font-medium text-gray-700 mb-1">
-              Full Name *
-            </label>
-            <input
-              id="client_name"
-              v-model="form.client_name"
-              type="text"
-              required
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter your full name"
-            />
-            <p v-if="errors.client_name" class="mt-1 text-sm text-red-600">{{ errors.client_name }}</p>
-          </div>
-
           <div>
             <label for="client_email" class="block text-sm font-medium text-gray-700 mb-1">
               Email Address *
@@ -67,20 +48,6 @@
             <p v-if="errors.client_email" class="mt-1 text-sm text-red-600">{{ errors.client_email }}</p>
           </div>
         </div>
-      </div>
-
-      <!-- Additional Notes -->
-      <div>
-        <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">
-          Additional Notes (Optional)
-        </label>
-        <textarea
-          id="notes"
-          v-model="form.notes"
-          rows="3"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Any special requests or notes for your appointment..."
-        ></textarea>
       </div>
 
 
@@ -136,9 +103,7 @@ export default {
     const errors = reactive({});
 
     const form = reactive({
-      client_name: '',
       client_email: '',
-      notes: '',
     });
 
     const formatDate = (dateString) => {
@@ -173,10 +138,6 @@ export default {
       // Clear previous errors
       Object.keys(errors).forEach(key => delete errors[key]);
 
-      if (!form.client_name.trim()) {
-        errors.client_name = 'Full name is required';
-      }
-
       if (!form.client_email.trim()) {
         errors.client_email = 'Email address is required';
       } else if (!isValidEmail(form.client_email)) {
@@ -203,9 +164,7 @@ export default {
           appointment_date: props.selectedDate,
           appointment_time: props.selectedTime.time,
           service_id: props.selectedService.id,
-          client_name: form.client_name.trim(),
           client_email: form.client_email.trim(),
-          notes: form.notes.trim() || null,
         };
 
         emit('booking-submitted', bookingData);

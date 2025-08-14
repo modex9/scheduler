@@ -20,28 +20,19 @@ class AvailabilityController extends Controller
      */
     public function getAvailableSlots(GetAvailabilityRequest $request): JsonResponse
     {
-        try {
-            $date = $request->input('date');
-            $serviceId = $request->input('service_id');
+        $date = $request->input('date');
+        $serviceId = $request->input('service_id');
 
-            $availableSlots = $this->availabilityService->getAvailableSlots($date, $serviceId);
+        $availableSlots = $this->availabilityService->getAvailableSlots($date, $serviceId);
 
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'date' => $date,
-                    'available_slots' => $availableSlots->values(),
-                    'total_slots' => $availableSlots->count(),
-                ],
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while fetching availability',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'date' => $date,
+                'available_slots' => $availableSlots->values(),
+                'total_slots' => $availableSlots->count(),
+            ],
+        ]);
     }
 
     /**
@@ -49,41 +40,45 @@ class AvailabilityController extends Controller
      */
     public function checkSlotAvailability(Request $request): JsonResponse
     {
-        try {
-            $request->validate([
-                'date' => 'required|date|after_or_equal:today',
-                'time' => 'required|date_format:H:i',
-                'service_id' => 'required|integer|exists:services,id',
-            ]);
+        $request->validate([
+            'date' => 'required|date',
+            'time' => 'required|date_format:H:i',
+            'service_id' => 'required|integer|exists:services,id',
+        ]);
 
-            $date = $request->input('date');
-            $time = $request->input('time');
-            $serviceId = $request->input('service_id');
+        $date = $request->input('date');
+        $time = $request->input('time');
+        $serviceId = $request->input('service_id');
 
-            $isAvailable = $this->availabilityService->isSlotAvailable($date, $time, $serviceId);
+        // Custom validation for past date/time
+        $appointmentDateTime = \Carbon\Carbon::createFromFormat(
+            'Y-m-d H:i',
+            $date . ' ' . $time,
+            config('app.timezone')
+        );
 
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'date' => $date,
-                    'time' => $time,
-                    'service_id' => $serviceId,
-                    'is_available' => $isAvailable,
-                ],
-            ]);
+        $now = now();
 
-        } catch (ValidationException $e) {
+        if ($appointmentDateTime->lt($now)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
-                'errors' => $e->errors(),
+                'errors' => [
+                    'date' => ['Cannot check availability for past dates and times.']
+                ]
             ], 422);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while checking availability',
-                'error' => $e->getMessage(),
-            ], 500);
         }
+
+        $isAvailable = $this->availabilityService->isSlotAvailable($date, $time, $serviceId);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'date' => $date,
+                'time' => $time,
+                'service_id' => $serviceId,
+                'is_available' => $isAvailable,
+            ],
+        ]);
     }
 }

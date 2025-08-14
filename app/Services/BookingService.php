@@ -40,8 +40,6 @@ class BookingService
                 'appointment_time' => $data['appointment_time'],
                 'service_id' => $data['service_id'],
                 'client_email' => $data['client_email'],
-                'client_name' => $data['client_name'],
-                'notes' => $data['notes'] ?? null,
                 'status' => 'confirmed',
             ]);
         });
@@ -52,14 +50,6 @@ class BookingService
      */
     private function validateBookingData(array $data): void
     {
-        // Check if date is in the future
-        $appointmentDate = Carbon::parse($data['appointment_date']);
-        if ($appointmentDate->isPast()) {
-            throw ValidationException::withMessages([
-                'appointment_date' => 'Appointments cannot be booked for past dates.'
-            ]);
-        }
-
         // Check if service exists and is active
         $service = Service::where('id', $data['service_id'])
             ->where('is_active', true)
@@ -71,15 +61,8 @@ class BookingService
             ]);
         }
 
-        // Validate email format
-        if (!filter_var($data['client_email'], FILTER_VALIDATE_EMAIL)) {
-            throw ValidationException::withMessages([
-                'client_email' => 'Please provide a valid email address.'
-            ]);
-        }
-
         // Validate required fields
-        $requiredFields = ['appointment_date', 'appointment_time', 'service_id', 'client_email', 'client_name'];
+        $requiredFields = ['appointment_date', 'appointment_time', 'service_id', 'client_email'];
         foreach ($requiredFields as $field) {
             if (empty($data[$field])) {
                 throw ValidationException::withMessages([

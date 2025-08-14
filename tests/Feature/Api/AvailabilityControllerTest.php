@@ -172,7 +172,6 @@ class AvailabilityControllerTest extends TestCase
 
         $response->assertStatus(422)
             ->assertJsonStructure([
-                'success',
                 'message',
                 'errors'
             ]);

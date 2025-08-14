@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedInteger('duration_minutes'); // Duration in minutes
-            $table->decimal('price', 8, 2)->default(0.00);
-            $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

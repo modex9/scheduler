@@ -16,7 +16,6 @@ class AppointmentTest extends TestCase
         $service = Service::create([
             'name' => 'Haircut',
             'duration_minutes' => 60,
-            'price' => 50.00,
         ]);
 
         $appointment = Appointment::create([
@@ -24,9 +23,7 @@ class AppointmentTest extends TestCase
             'appointment_time' => '14:00',
             'service_id' => $service->id,
             'client_email' => 'john@example.com',
-            'client_name' => 'John Doe',
             'status' => 'confirmed',
-            'notes' => 'First time client',
         ]);
 
         $this->assertDatabaseHas('appointments', [
@@ -35,9 +32,7 @@ class AppointmentTest extends TestCase
             'appointment_time' => '14:00',
             'service_id' => $service->id,
             'client_email' => 'john@example.com',
-            'client_name' => 'John Doe',
             'status' => 'confirmed',
-            'notes' => 'First time client',
         ]);
     }
 
@@ -46,7 +41,6 @@ class AppointmentTest extends TestCase
         $service = Service::create([
             'name' => 'Haircut',
             'duration_minutes' => 60,
-            'price' => 50.00,
         ]);
 
         $appointment = Appointment::create([
@@ -54,7 +48,6 @@ class AppointmentTest extends TestCase
             'appointment_time' => '14:00',
             'service_id' => $service->id,
             'client_email' => 'john@example.com',
-            'client_name' => 'John Doe',
         ]);
 
         $this->assertEquals('Haircut', $appointment->service->name);
@@ -66,7 +59,6 @@ class AppointmentTest extends TestCase
         $service = Service::create([
             'name' => 'Haircut',
             'duration_minutes' => 60,
-            'price' => 50.00,
         ]);
 
         Appointment::create([
@@ -74,7 +66,6 @@ class AppointmentTest extends TestCase
             'appointment_time' => '14:00',
             'service_id' => $service->id,
             'client_email' => 'john@example.com',
-            'client_name' => 'John Doe',
             'status' => 'confirmed',
         ]);
 
@@ -83,7 +74,6 @@ class AppointmentTest extends TestCase
             'appointment_time' => '15:00',
             'service_id' => $service->id,
             'client_email' => 'jane@example.com',
-            'client_name' => 'Jane Doe',
             'status' => 'cancelled',
         ]);
 
@@ -98,7 +88,6 @@ class AppointmentTest extends TestCase
         $service = Service::create([
             'name' => 'Haircut',
             'duration_minutes' => 60,
-            'price' => 50.00,
         ]);
 
         Appointment::create([
@@ -106,7 +95,6 @@ class AppointmentTest extends TestCase
             'appointment_time' => '14:00',
             'service_id' => $service->id,
             'client_email' => 'john@example.com',
-            'client_name' => 'John Doe',
         ]);
 
         Appointment::create([
@@ -114,7 +102,6 @@ class AppointmentTest extends TestCase
             'appointment_time' => '15:00',
             'service_id' => $service->id,
             'client_email' => 'jane@example.com',
-            'client_name' => 'Jane Doe',
         ]);
 
         $appointmentsForDate = Appointment::forDate('2024-01-15')->get();
@@ -127,7 +114,6 @@ class AppointmentTest extends TestCase
         $service = Service::create([
             'name' => 'Haircut',
             'duration_minutes' => 60,
-            'price' => 50.00,
         ]);
 
         Appointment::create([
@@ -135,7 +121,6 @@ class AppointmentTest extends TestCase
             'appointment_time' => '14:00',
             'service_id' => $service->id,
             'client_email' => 'john@example.com',
-            'client_name' => 'John Doe',
         ]);
 
         $this->expectException(\Illuminate\Database\QueryException::class);
@@ -145,7 +130,6 @@ class AppointmentTest extends TestCase
             'appointment_time' => '14:00', // Same date and time
             'service_id' => $service->id,
             'client_email' => 'jane@example.com',
-            'client_name' => 'Jane Doe',
         ]);
     }
 }

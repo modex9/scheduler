@@ -22,13 +22,39 @@ class BookAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'appointment_date' => 'required|date|after_or_equal:today',
+            'appointment_date' => 'required|date',
             'appointment_time' => 'required|date_format:H:i',
             'service_id' => 'required|integer|exists:services,id',
             'client_email' => 'required|email',
-            'client_name' => 'required|string|max:255',
-            'notes' => 'nullable|string',
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $appointmentDate = $this->input('appointment_date');
+            $appointmentTime = $this->input('appointment_time');
+
+            if ($appointmentDate && $appointmentTime) {
+                // Create appointment datetime using the application's timezone
+                $appointmentDateTime = \Carbon\Carbon::createFromFormat(
+                    'Y-m-d H:i',
+                    $appointmentDate . ' ' . $appointmentTime,
+                    config('app.timezone')
+                );
+
+                // Get current time in the application's timezone
+                $now = now();
+
+                // Check if appointment is in the past
+                if ($appointmentDateTime->lt($now)) {
+                    $validator->errors()->add('appointment_time', 'Cannot book appointments for past times. Please select a future time.');
+                }
+            }
+        });
     }
 
     /**
@@ -37,7 +63,6 @@ class BookAppointmentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'appointment_date.after_or_equal' => 'Appointments cannot be booked for past dates.',
             'appointment_time.date_format' => 'Please provide a valid time in HH:MM format.',
             'service_id.exists' => 'The selected service is not available.',
             'client_email.email' => 'Please provide a valid email address.',

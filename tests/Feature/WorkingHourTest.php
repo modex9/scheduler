@@ -73,7 +73,6 @@ class WorkingHourTest extends TestCase
         $service = Service::create([
             'name' => 'Haircut',
             'duration_minutes' => 60,
-            'price' => 50.00,
         ]);
 
         $workingHour->services()->attach($service->id);
@@ -82,7 +81,7 @@ class WorkingHourTest extends TestCase
         $this->assertEquals('Haircut', $workingHour->services->first()->name);
     }
 
-    public function test_cannot_create_duplicate_day_of_week(): void
+    public function test_can_create_multiple_working_hours_for_same_day(): void
     {
         WorkingHour::create([
             'day_of_week' => 1,
@@ -90,10 +89,20 @@ class WorkingHourTest extends TestCase
             'end_time' => '17:00',
         ]);
 
-        $this->expectException(\Illuminate\Database\QueryException::class);
-
-        WorkingHour::create([
+        $secondWorkingHour = WorkingHour::create([
             'day_of_week' => 1, // Same day
+            'start_time' => '10:00',
+            'end_time' => '18:00',
+        ]);
+
+        $this->assertDatabaseHas('working_hours', [
+            'day_of_week' => 1,
+            'start_time' => '09:00',
+            'end_time' => '17:00',
+        ]);
+
+        $this->assertDatabaseHas('working_hours', [
+            'day_of_week' => 1,
             'start_time' => '10:00',
             'end_time' => '18:00',
         ]);

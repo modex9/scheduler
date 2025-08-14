@@ -71,7 +71,6 @@ class AvailabilityService
                             'service_id' => $service->id,
                             'service_name' => $service->name,
                             'duration_minutes' => $service->duration_minutes,
-                            'price' => $service->price,
                         ]);
                     }
                 }

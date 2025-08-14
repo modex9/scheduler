@@ -17,9 +17,7 @@ return new class extends Migration
             $table->time('appointment_time');
             $table->foreignId('service_id')->constrained()->onDelete('cascade');
             $table->string('client_email');
-            $table->string('client_name');
-            $table->enum('status', ['confirmed', 'cancelled', 'completed'])->default('confirmed');
-            $table->text('notes')->nullable();
+            $table->enum('status', ['confirmed', 'cancelled'])->default('confirmed');
             $table->timestamps();
 
             // Prevent double bookings for the same time slot

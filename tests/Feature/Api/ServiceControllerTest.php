@@ -53,8 +53,6 @@ class ServiceControllerTest extends TestCase
                         'id',
                         'name',
                         'duration_minutes',
-                        'price',
-                        'description',
                         'is_active'
                     ]
                 ]
@@ -75,8 +73,6 @@ class ServiceControllerTest extends TestCase
         $serviceData = [
             'name' => 'New Service',
             'duration_minutes' => 90,
-            'price' => 75.00,
-            'description' => 'A new service for testing',
             'is_active' => true,
         ];
 
@@ -91,8 +87,6 @@ class ServiceControllerTest extends TestCase
                         'id',
                         'name',
                         'duration_minutes',
-                        'price',
-                        'description',
                         'is_active'
                     ]
                 ]
@@ -104,8 +98,6 @@ class ServiceControllerTest extends TestCase
                     'service' => [
                         'name' => 'New Service',
                         'duration_minutes' => 90,
-                        'price' => '75.00',
-                        'description' => 'A new service for testing',
                         'is_active' => true,
                     ]
                 ]
@@ -114,7 +106,6 @@ class ServiceControllerTest extends TestCase
         $this->assertDatabaseHas('services', [
             'name' => 'New Service',
             'duration_minutes' => 90,
-            'price' => '75.00',
         ]);
     }
 
@@ -123,7 +114,6 @@ class ServiceControllerTest extends TestCase
         $serviceData = [
             'name' => 'Invalid Service',
             'duration_minutes' => 10, // Too short
-            'price' => 50.00,
         ];
 
         $response = $this->postJson('/api/services', $serviceData);
@@ -131,12 +121,11 @@ class ServiceControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_cannot_create_service_with_negative_price(): void
+    public function test_cannot_create_service_with_invalid_duration_too_long(): void
     {
         $serviceData = [
             'name' => 'Invalid Service',
-            'duration_minutes' => 60,
-            'price' => -10.00, // Negative price
+            'duration_minutes' => 600, // Too long (10 hours)
         ];
 
         $response = $this->postJson('/api/services', $serviceData);
@@ -149,7 +138,7 @@ class ServiceControllerTest extends TestCase
         $service = Service::first();
         $updateData = [
             'name' => 'Updated Service',
-            'price' => 100.00,
+            'duration_minutes' => 120,
         ];
 
         $response = $this->putJson("/api/services/{$service->id}", $updateData);
@@ -162,7 +151,7 @@ class ServiceControllerTest extends TestCase
                     'service' => [
                         'id' => $service->id,
                         'name' => 'Updated Service',
-                        'price' => '100.00',
+                        'duration_minutes' => 120,
                     ]
                 ]
             ]);
@@ -170,7 +159,7 @@ class ServiceControllerTest extends TestCase
         $this->assertDatabaseHas('services', [
             'id' => $service->id,
             'name' => 'Updated Service',
-            'price' => '100.00',
+            'duration_minutes' => 120,
         ]);
     }
 
