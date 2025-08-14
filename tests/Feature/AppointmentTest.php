@@ -31,7 +31,7 @@ class AppointmentTest extends TestCase
 
         $this->assertDatabaseHas('appointments', [
             'id' => $appointment->id,
-            'appointment_date' => '2024-01-15 00:00:00',
+            'appointment_date' => '2024-01-15',
             'appointment_time' => '14:00',
             'service_id' => $service->id,
             'client_email' => 'john@example.com',
