@@ -141,9 +141,9 @@ class WorkingHourControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_cannot_create_duplicate_day_of_week(): void
+    public function test_can_create_multiple_working_hours_for_same_day(): void
     {
-        // Try to create another working hour for Monday (day 1)
+        // Create another working hour for Monday (day 1)
         $workingHourData = [
             'day_of_week' => 1, // Monday already exists
             'start_time' => '18:00',
@@ -152,7 +152,7 @@ class WorkingHourControllerTest extends TestCase
 
         $response = $this->postJson('/api/working-hours', $workingHourData);
 
-        $response->assertStatus(500); // Should fail due to unique constraint
+        $response->assertStatus(201); // Should succeed since we allow multiple hours per day
     }
 
     public function test_can_update_working_hour(): void

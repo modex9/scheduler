@@ -19,8 +19,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            // Ensure no duplicate day entries
-            $table->unique('day_of_week');
+            // Allow multiple working hours per day
         });
     }
 
