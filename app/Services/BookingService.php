@@ -2,16 +2,18 @@
 
 namespace App\Services;
 
+use App\Contracts\AvailabilityServiceInterface;
+use App\Contracts\BookingServiceInterface;
 use App\Models\Appointment;
 use App\Models\Service;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
-class BookingService
+class BookingService implements BookingServiceInterface
 {
     public function __construct(
-        private AvailabilityService $availabilityService
+        private AvailabilityServiceInterface $availabilityService
     ) {}
 
     /**

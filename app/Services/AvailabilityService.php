@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
+use App\Contracts\AvailabilityServiceInterface;
 use App\Models\Appointment;
 use App\Models\Service;
 use App\Models\WorkingHour;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
-class AvailabilityService
+class AvailabilityService implements AvailabilityServiceInterface
 {
     /**
      * Get available time slots for a specific date.
@@ -36,8 +37,8 @@ class AvailabilityService
             return collect();
         }
 
-        // Get existing appointments for this date
-        $existingAppointments = Appointment::forDate($date)->confirmed()->get();
+        // Get existing appointments for this date with service relationship to avoid N+1 queries
+        $existingAppointments = Appointment::forDate($date)->confirmed()->with('service')->get();
 
         // Generate time slots
         $slots = $this->generateTimeSlots($workingHours, $services);

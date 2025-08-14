@@ -22,6 +22,11 @@ return new class extends Migration
 
             // Prevent double bookings for the same time slot
             $table->unique(['appointment_date', 'appointment_time']);
+            
+            // Add indexes for better query performance
+            $table->index(['appointment_date']);
+            $table->index(['service_id']);
+            $table->index(['status']);
         });
     }
 

@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Contracts\BookingServiceInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\BookAppointmentRequest;
-use App\Services\BookingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 
 class AppointmentController extends Controller
 {
     public function __construct(
-        private BookingService $bookingService
+        private BookingServiceInterface $bookingService
     ) {}
 
     /**

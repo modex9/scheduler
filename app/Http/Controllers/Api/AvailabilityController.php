@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Contracts\AvailabilityServiceInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\GetAvailabilityRequest;
-use App\Services\AvailabilityService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 class AvailabilityController extends Controller
 {
     public function __construct(
-        private AvailabilityService $availabilityService
+        private AvailabilityServiceInterface $availabilityService
     ) {}
 
     /**

@@ -20,6 +20,9 @@ return new class extends Migration
             $table->timestamps();
 
             // Allow multiple working hours per day
+            
+            // Add index for better query performance
+            $table->index(['day_of_week']);
         });
     }
 
